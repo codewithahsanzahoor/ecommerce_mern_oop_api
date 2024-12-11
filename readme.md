@@ -15,3 +15,7 @@ steps to initialize the backend project with typescript mern stack project
 10. install dotenv
  npm i dotenv
  npm i -D @types/dotenv
+
+11. setup morgan
+ npm i morgan
+ npm i -D @types/morgan
