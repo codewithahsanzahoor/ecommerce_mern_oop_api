@@ -4,4 +4,4 @@ steps to initialize the backend project with typescript mern stack project
 3. npm i -D typescript ts-node nodemon @types/node
 4. npx tsc --init
 5. initialize the git repo and create a readme.md file and create a gitignore file
-6. 
+6. add dev dev script in package.json file ["dev":"nodemon server.ts"]
