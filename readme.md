@@ -19,3 +19,7 @@ steps to initialize the backend project with typescript mern stack project
 11. setup morgan
  npm i morgan
  npm i -D @types/morgan
+
+12. setup mongoose and mongodb
+ npm i mongoose
+ npm i -D @types/mongoose
