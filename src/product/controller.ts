@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import Product from "./model";
+// import errorHandler from "../middleware/error";
+import ErrorHandler from "../utils/errorHandler";
+import errorHandler from "../middleware/error";
 
 const getAllProducts = async (
 	req: Request,
@@ -10,7 +13,9 @@ const getAllProducts = async (
 		const products = await Product.find();
 		res.status(200).json({ message: "Get all products", products });
 	} catch (error) {
-		res.status(400).json({ message: "Get all products failed", error });
+		// res.status(400).json({ message: "Get all products failed", error });
+		const err = new ErrorHandler("Get all products failed", 400);
+		next(errorHandler(err, req, res, next));
 	}
 	return next();
 };
@@ -25,7 +30,9 @@ const getSingleProduct = async (
 		const product = await Product.findById(id);
 		res.status(200).json({ message: "Get single product", product });
 	} catch (error) {
-		res.status(400).json({ message: "Get single product failed" });
+		// res.status(400).json({ message: "Get single product failed" });
+		const err = new ErrorHandler("Get all single product failed", 400);
+		next(errorHandler(err, req, res, next));
 	}
 	return next();
 };
@@ -40,7 +47,9 @@ const updateProduct = async (
 		const product = await Product.findByIdAndUpdate(id, req.body);
 		res.status(200).json({ message: "Update product", product });
 	} catch (error) {
-		res.status(400).json({ message: "Update product failed" });
+		// res.status(400).json({ message: "Update product failed" });
+		const err = new ErrorHandler("Update product failed", 400);
+		next(errorHandler(err, req, res, next));
 	}
 	return next();
 };
@@ -55,7 +64,9 @@ const createProduct = async (
 	try {
 		createBook = await Product.create(body);
 	} catch (error) {
-		res.status(400).json({ message: "Create product failed" });
+		// res.status(400).json({ message: "Create product failed" });
+		const err = new ErrorHandler("Create product failed", 400);
+		next(errorHandler(err, req, res, next));
 	}
 
 	res.status(200).json({ message: "Create product", createBook });
@@ -71,12 +82,16 @@ const deleteProduct = async (
 		const { id } = req.params;
 		const product = await Product.findByIdAndDelete(id);
 		if (!product) {
-			res.status(404).json({ message: "Product not found" });
+			// res.status(404).json({ message: "Product not found" });
+			const err = new ErrorHandler("Product not found", 404);
+			next(errorHandler(err, req, res, next));
 			return next();
 		}
 		res.status(200).json({ message: "Delete product", product });
 	} catch (error) {
-		res.status(400).json({ message: "Delete product failed" });
+		// res.status(400).json({ message: "Delete product failed" });
+		const err = new ErrorHandler("Delete product failed", 400);
+		next(errorHandler(err, req, res, next));
 	}
 	return next();
 };
