@@ -23,3 +23,6 @@ steps to initialize the backend project with typescript mern stack project
 12. setup mongoose and mongodb
  npm i mongoose
  npm i -D @types/mongoose
+
+13. setup global error handler
+ by using errorhandler class
