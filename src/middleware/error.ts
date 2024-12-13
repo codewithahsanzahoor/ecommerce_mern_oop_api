@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import ErrorHandler from "../utils/errorHandler";
+import { config } from "../config/config";
 
 const errorHandler = (
 	err: ErrorHandler,
@@ -14,7 +15,7 @@ const errorHandler = (
 	res.status(err.statusCode).json({
 		success: false,
 		message: err.message,
-		errorStack: err.stack,
+		errorStack: config.env === "development" ? err.stack : null,
 	});
 
 	return next();
