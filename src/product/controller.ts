@@ -11,7 +11,7 @@ const getAllProducts = async (
 ) => {
 	try {
 		const products = await Product.find();
-		res.status(200).json({ message: "Get all products", products });
+		res.status(200).json({ success: true, products });
 	} catch (error) {
 		// res.status(400).json({ message: "Get all products failed", error });
 		const err = new ErrorHandler("Get all products failed", 400);
@@ -28,7 +28,7 @@ const getSingleProduct = async (
 	try {
 		const { id } = req.params;
 		const product = await Product.findById(id);
-		res.status(200).json({ message: "Get single product", product });
+		res.status(200).json({ success: true, product });
 	} catch (error) {
 		// res.status(400).json({ message: "Get single product failed" });
 		const err = new ErrorHandler("Get all single product failed", 400);
@@ -45,7 +45,7 @@ const updateProduct = async (
 	try {
 		const { id } = req.params;
 		const product = await Product.findByIdAndUpdate(id, req.body);
-		res.status(200).json({ message: "Update product", product });
+		res.status(200).json({ success: true, product });
 	} catch (error) {
 		// res.status(400).json({ message: "Update product failed" });
 		const err = new ErrorHandler("Update product failed", 400);
@@ -69,7 +69,7 @@ const createProduct = async (
 		next(errorHandler(err, req, res, next));
 	}
 
-	res.status(200).json({ message: "Create product", createBook });
+	res.status(200).json({ success: true, createBook });
 	return next();
 };
 
@@ -87,7 +87,7 @@ const deleteProduct = async (
 			next(errorHandler(err, req, res, next));
 			return next();
 		}
-		res.status(200).json({ message: "Delete product", product });
+		res.status(200).json({ success: true, product });
 	} catch (error) {
 		// res.status(400).json({ message: "Delete product failed" });
 		const err = new ErrorHandler("Delete product failed", 400);
