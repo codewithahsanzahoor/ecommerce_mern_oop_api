@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import Product from "./model";
-// import errorHandler from "../middleware/error";
 import ErrorHandler from "../utils/errorHandler";
 import errorHandler from "../middleware/error";
 
@@ -12,12 +11,12 @@ const getAllProducts = async (
 	try {
 		const products = await Product.find();
 		res.status(200).json({ success: true, products });
-	} catch (error) {
+	} catch (error: any) {
 		// res.status(400).json({ message: "Get all products failed", error });
-		const err = new ErrorHandler("Get all products failed", 400);
-		next(errorHandler(err, req, res, next));
+		// const err = new ErrorHandler("Get all products failed", 400);
+
+		next(errorHandler(error, req, res, next));
 	}
-	return next();
 };
 
 const getSingleProduct = async (
@@ -29,12 +28,12 @@ const getSingleProduct = async (
 		const { id } = req.params;
 		const product = await Product.findById(id);
 		res.status(200).json({ success: true, product });
-	} catch (error) {
+	} catch (error: any) {
 		// res.status(400).json({ message: "Get single product failed" });
-		const err = new ErrorHandler("Get all single product failed", 400);
-		next(errorHandler(err, req, res, next));
+		// const err = new ErrorHandler("Get all single product failed", 400);
+
+		next(errorHandler(error, req, res, next));
 	}
-	return next();
 };
 
 const updateProduct = async (
@@ -46,12 +45,12 @@ const updateProduct = async (
 		const { id } = req.params;
 		const product = await Product.findByIdAndUpdate(id, req.body);
 		res.status(200).json({ success: true, product });
-	} catch (error) {
+	} catch (error: any) {
 		// res.status(400).json({ message: "Update product failed" });
-		const err = new ErrorHandler("Update product failed", 400);
-		next(errorHandler(err, req, res, next));
+		// const err = new ErrorHandler("Update product failed", 400);
+
+		next(errorHandler(error, req, res, next));
 	}
-	return next();
 };
 
 const createProduct = async (
@@ -63,14 +62,13 @@ const createProduct = async (
 	let createBook = {};
 	try {
 		createBook = await Product.create(body);
-	} catch (error) {
+		res.status(200).json({ success: true, createBook });
+	} catch (error: any) {
 		// res.status(400).json({ message: "Create product failed" });
-		const err = new ErrorHandler("Create product failed", 400);
-		next(errorHandler(err, req, res, next));
-	}
+		// const err = new ErrorHandler("Create product failed", 400);
 
-	res.status(200).json({ success: true, createBook });
-	return next();
+		next(errorHandler(error, req, res, next));
+	}
 };
 
 const deleteProduct = async (
@@ -88,12 +86,12 @@ const deleteProduct = async (
 			return next();
 		}
 		res.status(200).json({ success: true, product });
-	} catch (error) {
+	} catch (error: any) {
 		// res.status(400).json({ message: "Delete product failed" });
-		const err = new ErrorHandler("Delete product failed", 400);
-		next(errorHandler(err, req, res, next));
+		// const err = new ErrorHandler("Delete product failed", 400);
+
+		next(errorHandler(error, req, res, next));
 	}
-	return next();
 };
 
 export {

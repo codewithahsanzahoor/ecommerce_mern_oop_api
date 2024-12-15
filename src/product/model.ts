@@ -41,11 +41,11 @@ const productSchema = new mongoose.Schema<Product>({
 		{
 			public_id: {
 				type: String,
-				required: true,
+				required: [true, "Please enter product image"],
 			},
 			url: {
 				type: String,
-				required: true,
+				required: [true, "Please enter product image url"],
 			},
 		},
 	],
@@ -63,15 +63,15 @@ const productSchema = new mongoose.Schema<Product>({
 		{
 			name: {
 				type: String,
-				required: true,
+				required: [true, "Please enter product name"],
 			},
 			rating: {
 				type: Number,
-				required: true,
+				required: [true, "Please enter product rating"],
 			},
 			comment: {
 				type: String,
-				required: true,
+				required: [true, "Please enter product comment"],
 			},
 		},
 	],

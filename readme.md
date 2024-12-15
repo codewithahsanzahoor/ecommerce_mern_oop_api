@@ -9,20 +9,20 @@ steps to initialize the backend project with typescript mern stack project
 8. setup text formatter prettier extension and setup its rules in .prettierrc.json in root folder
 
 9. setup express sever
- npm i express
- npm i -D @types/express
+    npm i express
+    npm i -D @types/express
 
 10. install dotenv
- npm i dotenv
- npm i -D @types/dotenv
+    npm i dotenv
+    npm i -D @types/dotenv
 
 11. setup morgan
- npm i morgan
- npm i -D @types/morgan
+    npm i morgan
+    npm i -D @types/morgan
 
 12. setup mongoose and mongodb
- npm i mongoose
- npm i -D @types/mongoose
+    npm i mongoose
+    npm i -D @types/mongoose
 
 13. setup global error handler
- by using errorhandler class
+    by using errorhandler class
