@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Product from "./model";
 import ErrorHandler from "../utils/errorHandler";
 import errorHandler from "../middleware/error";
+import ApiFeatures from "../utils/apiFeatures";
 
 const getAllProducts = async (
 	req: Request,
@@ -9,8 +10,14 @@ const getAllProducts = async (
 	next: NextFunction
 ) => {
 	try {
-		const products = await Product.find();
-		res.status(200).json({ success: true, products });
+		const limit = 8;
+		const productCount = await Product.countDocuments();
+		const apiFeatures = new ApiFeatures(Product.find(), req.query)
+			.search()
+			.filter()
+			.pagination(limit);
+		const products = await apiFeatures.query;
+		res.status(200).json({ success: true, products, productCount });
 	} catch (error: any) {
 		// res.status(400).json({ message: "Get all products failed", error });
 		// const err = new ErrorHandler("Get all products failed", 400);

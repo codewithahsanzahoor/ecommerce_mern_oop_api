@@ -26,3 +26,7 @@ steps to initialize the backend project with typescript mern stack project
 
 13. setup global error handler
     by using errorhandler class
+
+14. setup try catch block in every async function
+    by using try catch block 
+    and handle error by using error handler class
