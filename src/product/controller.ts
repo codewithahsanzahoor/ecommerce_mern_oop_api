@@ -4,13 +4,17 @@ import ErrorHandler from "../utils/errorHandler";
 import errorHandler from "../middleware/error";
 import ApiFeatures from "../utils/apiFeatures";
 
+interface CustomRequest extends Request {
+	user: any;
+}
+
 const getAllProducts = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
 ) => {
 	try {
-		const limit = 8;
+		const limit = 2;
 		const productCount = await Product.countDocuments();
 		const apiFeatures = new ApiFeatures(Product.find(), req.query)
 			.search()
@@ -22,7 +26,7 @@ const getAllProducts = async (
 		// res.status(400).json({ message: "Get all products failed", error });
 		// const err = new ErrorHandler("Get all products failed", 400);
 
-		next(errorHandler(error, req, res, next));
+		return next(errorHandler(error, req, res, next));
 	}
 };
 
@@ -68,7 +72,9 @@ const createProduct = async (
 	const { body } = req;
 	let createBook = {};
 	try {
-		createBook = await Product.create(body);
+		const user = (req as CustomRequest).user;
+		// console.log(user);
+		createBook = await Product.create({ ...body, user: user._id });
 		res.status(200).json({ success: true, createBook });
 	} catch (error: any) {
 		// res.status(400).json({ message: "Create product failed" });

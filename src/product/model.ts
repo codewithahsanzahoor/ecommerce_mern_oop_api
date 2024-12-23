@@ -17,6 +17,11 @@ export interface Product {
 		comment: string;
 	}[];
 	createdAt: Date;
+	user: {
+		type: mongoose.Schema.Types.ObjectId;
+		ref: "User";
+		required: true;
+	};
 }
 
 const productSchema = new mongoose.Schema<Product>({
@@ -75,6 +80,11 @@ const productSchema = new mongoose.Schema<Product>({
 			},
 		},
 	],
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+		required: true,
+	},
 	createdAt: {
 		type: Date,
 		default: Date.now,
