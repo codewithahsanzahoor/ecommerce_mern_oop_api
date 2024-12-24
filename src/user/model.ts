@@ -3,6 +3,7 @@ import validator from "validator";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { config } from "../config/config";
+import crypto from "crypto";
 
 export interface User {
 	name: string;
@@ -14,10 +15,13 @@ export interface User {
 	};
 	role: string;
 	createdAt: Date;
-	resetPasswordToken: string;
-	resetPasswordExpires: Date;
+	resetPasswordToken: string | undefined;
+	resetPasswordExpires: Date | undefined;
 	getJWTToken(): string;
 	comparePassword(password: string): Promise<boolean>;
+	getResetPasswordToken(): string;
+	save(): Promise<void>;
+	_id: string;
 }
 
 const userSchema = new mongoose.Schema<User>({
@@ -74,6 +78,16 @@ userSchema.methods.getJWTToken = function () {
 
 userSchema.methods.comparePassword = async function (password: string) {
 	return await bcryptjs.compare(password, this.password as string);
+};
+
+userSchema.methods.getResetPasswordToken = function () {
+	const resetToken = crypto.randomBytes(20).toString("hex");
+	this.resetPasswordToken = crypto
+		.createHash("sha256")
+		.update(resetToken)
+		.digest("hex");
+	this.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
+	return resetToken;
 };
 
 export const User = mongoose.model("User", userSchema);
