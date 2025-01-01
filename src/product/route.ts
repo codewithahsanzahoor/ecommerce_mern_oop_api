@@ -3,7 +3,9 @@ import {
 	createOrUpdateReview,
 	createProduct,
 	deleteProduct,
+	deleteReview,
 	getAllProducts,
+	getAllReviews,
 	getSingleProduct,
 	updateProduct,
 } from "./controller";
@@ -15,6 +17,10 @@ router.route("/getall").get(getAllProducts);
 router.route("/single/:id").get(getSingleProduct);
 
 router.route("/createReview/:id").post(isAuthenticated, createOrUpdateReview);
+router
+	.route("/reviews/:id")
+	.get(getAllReviews)
+	.delete(isAuthenticated, deleteReview);
 
 //! admin routes
 router

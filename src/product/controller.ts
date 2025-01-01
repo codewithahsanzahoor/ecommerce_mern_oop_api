@@ -96,6 +96,56 @@ const createOrUpdateReview = async (
 	}
 };
 
+// get all reviews of a product
+const getAllReviews = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { id } = req.params;
+		const product = await Product.findById(id).select("reviews");
+		if (!product) {
+			const err = new ErrorHandler("Product not found", 404);
+			return next(errorHandler(err, req, res, next));
+		}
+		res.status(200).json({ success: true, product });
+	} catch (error: any) {
+		return next(errorHandler(error, req, res, next));
+	}
+};
+
+// delete review of a product
+const deleteReview = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { id } = req.params;
+		const product = await Product.findById(id);
+		if (!product) {
+			const err = new ErrorHandler("Product not found", 404);
+			return next(errorHandler(err, req, res, next));
+		}
+		const reviews = product?.reviews.filter(
+			(r) =>
+				r.user.toString() !== (req as CustomRequest).user._id.toString()
+		);
+		product.reviews = reviews;
+		product.noOfReviews = product.reviews.length;
+		product.ratings =
+			(product?.reviews ?? []).reduce(
+				(acc, curr) => acc + curr.rating,
+				0
+			) / (product?.reviews?.length ?? 1);
+		await product.save({ validateBeforeSave: false });
+		res.status(200).json({ success: true, message: "Review deleted" });
+	} catch (error: any) {
+		return next(errorHandler(error, req, res, next));
+	}
+};
+
 // ! admin routes for products
 
 const updateProduct = async (
@@ -165,4 +215,6 @@ export {
 	updateProduct,
 	deleteProduct,
 	createOrUpdateReview,
+	getAllReviews,
+	deleteReview,
 };
