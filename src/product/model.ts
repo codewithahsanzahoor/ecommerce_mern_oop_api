@@ -11,11 +11,13 @@ export interface Product {
 	}[];
 	category: string;
 	stock: number;
-	numOfReviews: {
+	reviews: {
+		user: mongoose.Schema.Types.ObjectId;
 		name: string;
 		rating: number;
 		comment: string;
 	}[];
+	noOfReviews: number;
 	createdAt: Date;
 	user: {
 		type: mongoose.Schema.Types.ObjectId;
@@ -64,8 +66,13 @@ const productSchema = new mongoose.Schema<Product>({
 		maxLength: [4, "Stock cannot exceed 4 characters"],
 		default: 1,
 	},
-	numOfReviews: [
+	reviews: [
 		{
+			user: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "User",
+				required: true,
+			},
 			name: {
 				type: String,
 				required: [true, "Please enter product name"],
@@ -80,6 +87,10 @@ const productSchema = new mongoose.Schema<Product>({
 			},
 		},
 	],
+	noOfReviews: {
+		type: Number,
+		default: 0,
+	},
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",

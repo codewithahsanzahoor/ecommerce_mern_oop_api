@@ -35,9 +35,12 @@ const registerUser = async (
 			),
 		};
 
-		res.status(201)
-			.cookie("token", token, options)
-			.json({ success: true, user, token });
+		res.status(201).cookie("token", token, options).json({
+			success: true,
+			message: "User registered successfully",
+			user,
+			token,
+		});
 	} catch (error: any) {
 		return next(errorHandler(error, req, res, next));
 	}
@@ -64,9 +67,12 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
 				Date.now() + parseInt(config.JWT_EXPIRE) * 24 * 60 * 60 * 1000
 			),
 		};
-		res.status(200)
-			.cookie("token", token, options)
-			.json({ success: true, user, token });
+		res.status(200).cookie("token", token, options).json({
+			success: true,
+			message: "User logged in successfully",
+			user,
+			token,
+		});
 	} catch (error: any) {
 		return next(errorHandler(error, req, res, next));
 	}
@@ -176,7 +182,7 @@ const resetPassword = async (
 const userDetails = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const user = (req as CustomRequest).user;
-		res.status(200).json({ success: true, user });
+		res.status(200).json({ success: true, message: "User details", user });
 	} catch (error: any) {
 		return next(errorHandler(error, req, res, next));
 	}
@@ -224,9 +230,117 @@ const updatePassword = async (
 				Date.now() + parseInt(config.JWT_EXPIRE) * 24 * 60 * 60 * 1000
 			),
 		};
-		res.status(200)
-			.cookie("token", token, options)
-			.json({ success: true, user, token });
+		res.status(200).cookie("token", token, options).json({
+			success: true,
+			message: "Password updated successfully",
+			user,
+			token,
+		});
+	} catch (error: any) {
+		return next(errorHandler(error, req, res, next));
+	}
+};
+
+// update user profile
+const updateUserProfile = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const userID = (req as CustomRequest).user;
+		const user = await User.findById(userID._id);
+		if (!user) {
+			const Error = new ErrorHandler("User not found", 404);
+			return next(errorHandler(Error, req, res, next));
+		}
+		if (req.body.name) {
+			user.name = req.body.name;
+		}
+		if (req.body.email) {
+			user.email = req.body.email;
+		}
+		if (req.body.avatar) {
+			user.avatar = req.body.avatar;
+		}
+		await user.save();
+		res.status(200).json({ success: true, message: "User updated", user });
+	} catch (error: any) {
+		return next(errorHandler(error, req, res, next));
+	}
+};
+
+// ! admin routes controllers
+// update user role
+const updateRole = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const { id } = req.params;
+		// const userID = (req as CustomRequest).user;
+		const user = await User.findById(id);
+		if (!user) {
+			const Error = new ErrorHandler("User not found", 404);
+			return next(errorHandler(Error, req, res, next));
+		}
+		user.role = req.body.role;
+		user.name = req.body.name;
+		user.email = req.body.email;
+		await user.save();
+		res.status(200).json({
+			success: true,
+			message: "User role updated",
+			user,
+		});
+	} catch (error: any) {
+		return next(errorHandler(error, req, res, next));
+	}
+};
+
+// get all users details
+const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const users = await User.find();
+		res.status(200).json({ success: true, message: "Users", users });
+	} catch (error: any) {
+		return next(errorHandler(error, req, res, next));
+	}
+};
+
+// admin user details
+const adminUserDetails = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const userID = (req as CustomRequest).user;
+		const user = await User.findById(userID._id);
+		res.status(200).json({ success: true, message: "User details", user });
+	} catch (error: any) {
+		return next(errorHandler(error, req, res, next));
+	}
+};
+
+// single user details
+const singleUserDetails = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { id } = req.params;
+		const user = await User.findById(id);
+		res.status(200).json({ success: true, message: "User details", user });
+	} catch (error: any) {
+		return next(errorHandler(error, req, res, next));
+	}
+};
+
+// delete user
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const { id } = req.params;
+		const user = await User.findByIdAndDelete(id);
+		res.status(200).json({ success: true, message: "User deleted", user });
 	} catch (error: any) {
 		return next(errorHandler(error, req, res, next));
 	}
@@ -240,4 +354,10 @@ export {
 	resetPassword,
 	userDetails,
 	updatePassword,
+	updateUserProfile,
+	updateRole,
+	getAllUsers,
+	adminUserDetails,
+	singleUserDetails,
+	deleteUser,
 };

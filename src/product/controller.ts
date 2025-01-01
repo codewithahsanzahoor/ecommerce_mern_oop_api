@@ -47,6 +47,57 @@ const getSingleProduct = async (
 	}
 };
 
+// create or update review of product
+const createOrUpdateReview = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { id } = req.params;
+		const product = await Product.findById(id);
+		if (!product) {
+			const err = new ErrorHandler("Product not found", 404);
+			return next(errorHandler(err, req, res, next));
+		}
+		const review = {
+			user: (req as CustomRequest).user._id,
+			name: (req as CustomRequest).user.name,
+			rating: Number(req.body.rating),
+			comment: req.body.comment,
+		};
+		const isReviewed = product?.reviews.find(
+			(r) =>
+				r.user.toString() === (req as CustomRequest).user._id.toString()
+		);
+		if (isReviewed) {
+			product.reviews.forEach((review) => {
+				if (
+					review.user.toString() ===
+					(req as CustomRequest).user._id.toString()
+				) {
+					review.rating = req.body.rating;
+					review.comment = req.body.comment;
+				}
+			});
+		} else {
+			product.reviews.push(review);
+			product.noOfReviews = product.reviews.length;
+		}
+		product.ratings =
+			(product?.reviews ?? []).reduce(
+				(acc, item) => item.rating + acc,
+				0
+			) / (product?.reviews?.length ?? 1);
+		await product.save({ validateBeforeSave: false });
+		res.status(200).json({ success: true, message: "Review added" });
+	} catch (error: any) {
+		return next(errorHandler(error, req, res, next));
+	}
+};
+
+// ! admin routes for products
+
 const updateProduct = async (
 	req: Request,
 	res: Response,
@@ -113,4 +164,5 @@ export {
 	getSingleProduct,
 	updateProduct,
 	deleteProduct,
+	createOrUpdateReview,
 };
