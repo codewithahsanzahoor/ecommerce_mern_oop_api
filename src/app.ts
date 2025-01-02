@@ -11,9 +11,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes
 import productRoute from "./product/route";
-import userRoute from "./user/route";
 app.use("/api/v1/product", productRoute);
+import userRoute from "./user/route";
 app.use("/api/v1/user", userRoute);
+import orderRoute from "./order/orderRoute";
+app.use("/api/v1/order", orderRoute);
 
 // global error handler
 app.use(ErrorHandler);
