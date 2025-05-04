@@ -1,3 +1,35 @@
+# 🛒 E-Commerce Backend API – Build by OOP
+
+A scalable, modular Express.js backend for an e-commerce application. This API includes product, user, and order routes with middleware support, request logging, and centralized error handling.
+
+---
+
+## 📌 Features
+
+- 🚀 Express.js-based server
+- 🧾 Modular route handling
+- 🔐 Cookie parser integration
+- 📄 Request logging via `morgan`
+- 💥 Centralized global error handling
+- 📦 JSON and URL-encoded data parsing
+
+---
+
+## 🧰 Tech Stack
+
+- **Node.js**
+- **Express.js**
+- **Morgan** – HTTP request logger
+- **Cookie-Parser** – for cookies
+- **Custom Middleware** – for error handling
+
+---
+
+
+
+
+
+
 steps to initialize the backend project with typescript mern stack project
 1. create a folder
 2. create a package.json file with npm init -y
@@ -30,3 +62,5 @@ steps to initialize the backend project with typescript mern stack project
 14. setup try catch block in every async function
     by using try catch block 
     and handle error by using error handler class
+
+
